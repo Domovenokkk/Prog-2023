@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <Windows.h>
+
 using namespace std;
 
 //Название, режиссер, продолжительность, год выхода, сборы, общепринятный рейтинг
@@ -9,20 +11,55 @@ using namespace std;
 //название, телефон и e-mail службы поддержки ресурса
 
 class FIO {
-protected:
+private:
 	string name;
 	string surname;
 	string patronymic;
-	friend class Film;
 public:
-	FIO() :
-		name("undefined"), surname("undefined"), patronymic("undefined") {}
+	FIO(string _name, string _surname, string _patronymic):
+		name(_name), surname(_surname), patronymic(_patronymic){}
 
-	FIO(string _name, string _surname, string _patronymic) :
-		name(_name), surname(_surname), patronymic(_patronymic) {}
+	string get_name() const {
+		return name;
+	}
 
-	FIO(const class FIO& fio) :
-		name(fio.name), surname(fio.surname), patronymic(fio.patronymic){}
+	string get_surname() const {
+		return surname;
+	}
+
+	string get_patronymic() const {
+		return patronymic;
+	}
+
+	FIO& operator=(const FIO& fio) {
+		name = fio.get_name();
+		surname = fio.get_surname();
+		patronymic = fio.get_patronymic();
+		return *this;
+	}
+
+	bool operator==(const FIO& fio) const {
+		return name == fio.get_name() &&
+			surname == fio.get_surname() &&
+			patronymic == fio.get_patronymic();
+	}
+
+	friend ostream& operator<<(ostream& out, const FIO& fio) {
+		out << fio.surname << " " <<
+			fio.name << " " <<
+			fio.patronymic << "\n";
+		return out;
+	}
+
+	friend std::istream& operator>> (std::istream& in, FIO& fio) {
+		in >> fio.surname;
+		in >> fio.name;
+		in >> fio.patronymic;
+		return in;
+	}
+
+
+
 
 };
 
@@ -31,7 +68,6 @@ protected:
 	string name;
 	string numPhone;
 	string e_mail;
-	friend class Film;
 public:
 	SupportService() :
 		name("undefined"), numPhone("undefined"), e_mail("undefined") {}
@@ -69,7 +105,7 @@ public:
 };
 
 class Film {
-protected:
+private:
 	string title;
 	Data date_of_release;
 	FIO director;
@@ -77,10 +113,6 @@ protected:
 	int sum_of_money;
 	int rating;
 public:
-	Film() :
-		title("undefined"), date_of_release(Data()), director(FIO()),
-		duration("undefined"), sum_of_money(0), rating(0) {}
-
 	Film(string _title, int _day, int _month, int _year,
 		string _name, string _surname, string _patronymic,
 		string _duration, int _sum_of_money, int _rating) :
@@ -88,9 +120,11 @@ public:
 		director(FIO(_name, _surname, _patronymic)), duration(_duration),
 		sum_of_money(_sum_of_money), rating(_rating) {}
 
-	Film (const class Film& film) :
+	Film(const class Film& film) :
 		title(film.title), date_of_release(film.date_of_release), director(film.director),
 		duration(film.duration), sum_of_money(film.sum_of_money), rating(film.rating) {}
+
+
 
 };
 
