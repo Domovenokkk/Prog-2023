@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <Windows.h>
+#include <vector>
+
 
 using namespace std;
 
@@ -64,7 +66,7 @@ public:
 };
 
 class SupportService {
-protected:
+private:
 	string name;
 	string numPhone;
 	string e_mail;
@@ -78,30 +80,59 @@ public:
 	SupportService(const class SupportService& sup) :
 		name(sup.name), numPhone(sup.numPhone), e_mail(sup.e_mail) {}
 
-
-
-	void PrintSupport() {
-		cout << "The name of support service: " << name << endl;
-		cout << "The phone number: " << numPhone << endl;
-		cout << "The e_mail of support service: " << e_mail << endl;
+	friend ostream& operator<<(ostream& out, const SupportService& sup) {
+		out << "Name of service: " << sup.name << "\n" <<
+			"Phone number:" << sup.numPhone << "\n" <<
+			"E-mail:" << sup.e_mail << "\n";
+		return out;
 	}
 };
 
 class Data {
-protected:
+private:
 	int day;
 	int month;
 	int year;
-	friend class Film;
 public:
-	Data() :
-		day(0), month(0), year(0) {}
-
 	Data(int _day, int _month, int _year) :
 		day(_day), month(_month), year(_year) {}
 
-	Data(const class Data& data) :
-		day(data.day), month(data.month), year(data.year) {}
+	void set_day(int _day) {
+		day = _day;
+	}
+
+	int get_day() const {
+		return day;
+	}
+
+	void set_month(int _month) {
+		month = _month;
+	}
+
+	int get_month() const {
+		return month;
+	}
+
+	void set_year(int _year) {
+		year = _year;
+	}
+
+	int get_year() const {
+		return year;
+	}
+
+	bool operator==(const Data& date) const {
+		return day == date.get_day() &&
+			month == date.get_month() &&
+			year == date.get_year();
+	}
+
+	friend ostream& operator<<(ostream& out, const Data& data) {
+		out << data.day << "." <<
+			data.month << "." <<
+			data.year << "\n";
+		return out;
+	}
 };
 
 class Film {
@@ -113,25 +144,147 @@ private:
 	int sum_of_money;
 	int rating;
 public:
-	Film(string _title, int _day, int _month, int _year,
-		string _name, string _surname, string _patronymic,
-		string _duration, int _sum_of_money, int _rating) :
-		title(_title), date_of_release(Data(_day, _month, _year)),
-		director(FIO(_name, _surname, _patronymic)), duration(_duration),
-		sum_of_money(_sum_of_money), rating(_rating) {}
+//	Film(string _title, Data _date_of_release, FIO _director, string _duration,
+//		int _sum_of_money, int _rating) :
+//		title(_title), date_of_release(_date_of_release), director(_director),
+//		duration(_duration), sum_of_money(_sum_of_money), rating(_rating) {}
 
-	Film(const class Film& film) :
-		title(film.title), date_of_release(film.date_of_release), director(film.director),
-		duration(film.duration), sum_of_money(film.sum_of_money), rating(film.rating) {}
+	Film(string _title, string _duration, int _sum_of_money, int _rating, 
+		Data _date_of_release, FIO _director):
+		title(_title),  duration(_duration), sum_of_money(_sum_of_money),
+		rating(_rating), date_of_release(_date_of_release), director(_director) {}
 
 
+
+	string get_title() const {
+		return title;
+	}
+
+	Data get_data() const {
+		return date_of_release;
+	}
+
+	FIO get_director() const {
+		return director;
+	}
+
+	string get_duration() const {
+		return duration;
+	}
+
+	int get_sum() const {
+		return sum_of_money;
+	}
+
+	int get_rating() const {
+		return rating;
+	}
+
+	Film& operator=(const Film& film) {
+		title = film.get_title();
+		date_of_release = film.get_data();
+		director = film.get_director();
+		duration = film.get_duration();
+		sum_of_money = film.get_sum();
+		rating = film.get_rating();
+		return *this;
+	}
+
+	bool operator==(const Film& film) {
+		return title == get_title() &&
+			date_of_release == get_data() &&
+			director == get_director() &&
+			duration == get_duration() &&
+			sum_of_money == get_sum() &&
+			rating == get_rating();
+
+	}
+
+	//Film& operator=(const Film& film) {
+	//	title = film.get_title();
+	//	date_of_release = film.get_data();
+	//	director = film.get_director();
+	//	duration = film.get_duration();
+	//	sum_of_money = film.get_sum();
+	//	rating = film.get_rating();
+	//	return *this;
+	//}
+
+	friend ostream& operator<<(ostream& out, const Film& film) {
+		out << film.title << " " <<
+			film.date_of_release << " " <<
+			film.director << " " <<
+			film.duration << " " <<
+			film.sum_of_money << " " <<
+			film.rating << "\n";
+		return out;
+	}
+
+	friend istream& operator>> (istream& in, Film& film) {
+		in >> film.title;
+		in >> film.duration;
+		in >> film.director;
+		return in;
+	}
 
 };
 
+class Filmoteka {
+private:
+	string nameFilmoteka;
+	vector<Film> films;
+public:
+	Filmoteka(string _nameFilmoteka) : nameFilmoteka(_nameFilmoteka) {}
+
+	void AddFilm(const Film film) {
+		films.push_back(film);
+	}
+
+	string get_nameF() const {
+		return nameFilmoteka;
+	}
+
+	vector<Film> get_films() const {
+		return films;
+	}
+
+	Filmoteka& operator=(const Filmoteka& teka) {
+		nameFilmoteka = teka.get_nameF();
+		films = teka.get_films();
+		return *this;
+	}
+
+	bool operator==(const Filmoteka& teka) const {
+		return nameFilmoteka == teka.get_nameF() &&
+			films == teka.get_films();
+	}
+
+	friend std::ostream& operator<<(std::ostream& out, const Filmoteka& teka) {
+		out << "Welcome to " << teka.get_nameF() << ". Here you can watch films that interest you.\n" <<
+			"-----Movies in your film library.-----";
+
+		vector<Film> films = teka.get_films();
+		for (int  i = 0; i < films.size(); i++) {
+			out << films[i] << "\n";
+		}
+		
+		out << "----------\n";
+
+		return out;
+	}
+};
 
 
-void main() {
+int main() {
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	SupportService sup("Support Service", "+79196575674", "supportservice@gmail.com");
+	cout << sup;
 
-	SupportService* support = new SupportService("Support Service", "+88005623441", "SupService@gmail.com");
-	support->PrintSupport();
+	Film firstfilm("ABCf", "1:45:22", 10000, 8);
+	Data firstdate(29, 01, 2005);
+	FIO firstdeirectro("A", "B", "C");
+
+	return 0;
+
 }
