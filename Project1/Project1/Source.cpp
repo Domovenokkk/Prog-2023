@@ -34,7 +34,7 @@ public:
 	}
 };
 
-void printdeck(int* openedcards, int count) {
+void pr(int* openedcards, int count) {
 	system("cls");
 	for (int i = 0; i < count; i++) {
 		if (openedcards[i] != -1)
@@ -45,9 +45,6 @@ void printdeck(int* openedcards, int count) {
 }
 
 int main() {
-
-	system("Cards");
-
 	srand(time(0));
 
 	SetConsoleCP(1251);
@@ -71,12 +68,11 @@ int main() {
 
 	Game game;
 
-	int opened_cards[14];
+	int opencard[14];
 	int opened = 0;
 	char last = -1, past = -1;
 
-	for (int i = 0; i < 14; i++) { opened_cards[i] = -1; }
-	// cards: 2 - 10 J Q K A
+	for (int i = 0; i < 14; i++) { opencard[i] = -1; }
 	while (!win) {
 		if (opened == count)
 			break;
@@ -93,7 +89,7 @@ int main() {
 
 			if (menupos < 0) { menupos = MENU_SIZE - 1; }
 			if (menupos > MENU_SIZE - 1) { menupos = 0; }
-			printdeck(opened_cards, count);
+			pr(opencard, count);
 			cout << endl << " ";
 			for (int i = 0; i < menupos; i++) {
 				cout << "   ";
@@ -105,17 +101,18 @@ int main() {
 		opened++;
 		past = last;
 		last = menupos;
-		opened_cards[menupos] = game.cards[menupos];
+		opencard[menupos] = game.cards[menupos];
 		if (opened % 2 == 0) {
-			if (opened_cards[past] != opened_cards[last]) {
-				printdeck(opened_cards, count);
+			if (opencard[past] != opencard[last]) {
+				pr(opencard, count);
 				Sleep(500);
 				opened -= 2;
-				opened_cards[past] = -1;
-				opened_cards[last] = -1;
+				opencard[past] = -1;
+				opencard[last] = -1;
 			}
 		}
 	}
 	system("cls");
-	cout << "You win!";
+	cout << "Congratulations. You won!";
 }
+
