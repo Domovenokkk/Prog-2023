@@ -2,8 +2,6 @@
 #include <string>
 #include <Windows.h>
 #include <vector>
-
-
 using namespace std;
 
 //Название, режиссер, продолжительность, год выхода, сборы, общепринятный рейтинг
@@ -11,59 +9,71 @@ using namespace std;
 //пользовательская оценка
 //статус
 //название, телефон и e-mail службы поддержки ресурса
+//
 
 class FIO {
-private:
-	string name;
-	string surname;
-	string patronymic;
+	std::string name, surname, lastname;
 public:
-	FIO(string _name, string _surname, string _patronymic):
-		name(_name), surname(_surname), patronymic(_patronymic){}
-
-	string get_name() const {
-		return name;
+	FIO() {
+		name = "no name";
+		surname = "no surname";
+		lastname = "no lastname";
+	}
+	FIO(std::string _name, std::string _surname,
+		std::string _lastname) :name(_name), surname(_surname), lastname(_lastname) {}
+	FIO(const FIO& a) :name(a.name), surname(a.surname), lastname(a.lastname) {}
+	FIO& operator =(FIO& a) {
+		if (this != &a) {
+			FIO tmp(a);
+			this->swap(tmp);
+		}
+		return *this;
+	}
+	void swap(FIO& a) {
+		std::swap(this->name, a.name);
+		std::swap(this->surname, a.surname);
+		std::swap(this->lastname, a.lastname);
 	}
 
+	friend std::ostream& operator << (std::ostream& out, const FIO& a);
+	friend std::istream& operator>>(std::istream& in, FIO& a);
+	friend bool operator ==(const FIO& a, const FIO& b) {
+		return (a.name == b.name) && (a.surname == b.surname) && (a.lastname == b.lastname);
+	}
+
+	string get_name() const{
+		return name;
+	}
 	string get_surname() const {
 		return surname;
 	}
-
-	string get_patronymic() const {
-		return patronymic;
+	string get_lastname() const {
+		return lastname;
 	}
 
-	FIO& operator=(const FIO& fio) {
-		name = fio.get_name();
-		surname = fio.get_surname();
-		patronymic = fio.get_patronymic();
+
+	FIO& operator=(const FIO& a) {
+		name = a.get_name();
+		surname = a.get_surname();
+		lastname = a.get_lastname();
 		return *this;
 	}
-
-	bool operator==(const FIO& fio) const {
-		return name == fio.get_name() &&
-			surname == fio.get_surname() &&
-			patronymic == fio.get_patronymic();
-	}
-
-	friend ostream& operator<<(ostream& out, const FIO& fio) {
-		out << fio.surname << " " <<
-			fio.name << " " <<
-			fio.patronymic << "\n";
-		return out;
-	}
-
-	friend std::istream& operator>> (std::istream& in, FIO& fio) {
-		in >> fio.surname;
-		in >> fio.name;
-		in >> fio.patronymic;
-		return in;
-	}
-
-
-
-
 };
+
+std::ostream& operator << (std::ostream& out, const FIO& a) {
+	out << a.name << " " << a.surname << " " << a.lastname;
+	return out;
+}
+
+std::istream& operator>>(std::istream& input, FIO& a) {
+	std::cout << "Input name: ";
+	input >> a.name;
+	std::cout << "Input surname: ";
+	input >> a.surname;
+	std::cout << "Input lastname: ";
+	input >> a.lastname;
+	return input;
+}
 
 class SupportService {
 private:
@@ -89,11 +99,16 @@ public:
 };
 
 class Data {
-private:
 	int day;
 	int month;
 	int year;
 public:
+	Data() {
+		day = 0;
+		month = 0;
+		year = 0;
+	}
+
 	Data(int _day, int _month, int _year) :
 		day(_day), month(_month), year(_year) {}
 
@@ -127,34 +142,57 @@ public:
 			year == date.get_year();
 	}
 
-	friend ostream& operator<<(ostream& out, const Data& data) {
-		out << data.day << "." <<
-			data.month << "." <<
-			data.year << "\n";
-		return out;
-	}
+	friend ostream& operator<<(ostream& out, const Data& data);
+	friend istream& operator>>(istream& input, Data& a);
 };
+
+ostream& operator<<(ostream& out, const Data& data) {
+	out << data.day << "." <<
+		data.month << "." <<
+		data.year << "\n";
+	return out;
+}
+istream& operator>>(istream& input, Data& a) {
+	std::cout << "Input day: ";
+	input >> a.day;
+	std::cout << "Input month: ";
+	input >> a.month;
+	std::cout << "Input year: ";
+	input >> a.year;
+	return input;
+}
+
+
+enum Genre {Science_fiction, Horror, Documentary, Animated, Thriller, Drama, Comedy, Adventury, None};
 
 class Film {
 private:
 	string title;
+	Genre genre;
 	Data date_of_release;
 	FIO director;
 	string duration;
 	int sum_of_money;
 	int rating;
 public:
-//	Film(string _title, Data _date_of_release, FIO _director, string _duration,
-//		int _sum_of_money, int _rating) :
-//		title(_title), date_of_release(_date_of_release), director(_director),
-//		duration(_duration), sum_of_money(_sum_of_money), rating(_rating) {}
+	
+	Film() {
+		title = "None";
+		genre = None;
+		duration = "None";
+		sum_of_money = 0;
+		rating = 0;
+	}
 
-	Film(string _title, string _duration, int _sum_of_money, int _rating, 
-		Data _date_of_release, FIO _director):
-		title(_title),  duration(_duration), sum_of_money(_sum_of_money),
+	Film(string _title, Genre _genre, string _duration, int _sum_of_money, int _rating,
+		Data _date_of_release, FIO _director) :
+		title(_title), genre(_genre), duration(_duration), sum_of_money(_sum_of_money),
 		rating(_rating), date_of_release(_date_of_release), director(_director) {}
 
-
+	Film(const Film& film) : title(film.title), genre(film.genre), duration(film.duration),
+		sum_of_money(film.sum_of_money), rating(film.rating), date_of_release(film.date_of_release),
+		director(film.director) 
+	{}
 
 	string get_title() const {
 		return title;
@@ -180,6 +218,10 @@ public:
 		return rating;
 	}
 
+	friend ostream& operator<<(ostream& out, const Film& film);
+
+	friend istream& operator>> (istream& in, Film& film);
+
 	Film& operator=(const Film& film) {
 		title = film.get_title();
 		date_of_release = film.get_data();
@@ -189,102 +231,182 @@ public:
 		rating = film.get_rating();
 		return *this;
 	}
-
-	bool operator==(const Film& film) {
-		return title == get_title() &&
-			date_of_release == get_data() &&
-			director == get_director() &&
-			duration == get_duration() &&
-			sum_of_money == get_sum() &&
-			rating == get_rating();
-
-	}
-
-	//Film& operator=(const Film& film) {
-	//	title = film.get_title();
-	//	date_of_release = film.get_data();
-	//	director = film.get_director();
-	//	duration = film.get_duration();
-	//	sum_of_money = film.get_sum();
-	//	rating = film.get_rating();
-	//	return *this;
-	//}
-
-	friend ostream& operator<<(ostream& out, const Film& film) {
-		out << film.title << " " <<
-			film.date_of_release << " " <<
-			film.director << " " <<
-			film.duration << " " <<
-			film.sum_of_money << " " <<
-			film.rating << "\n";
-		return out;
-	}
-
-	friend istream& operator>> (istream& in, Film& film) {
-		in >> film.title;
-		in >> film.duration;
-		in >> film.director;
-		return in;
-	}
-
 };
+
+ostream& operator<<(ostream& out, const Film& film) {
+	out << "--" << film.title << "--" << endl;
+	if (film.genre == Science_fiction) {
+		out << "Movie Genre: Science fiction" << endl;
+	}
+	else if (film.genre == Horror) {
+		out << "Movie Genre: Horror" << endl;
+	}
+	else if (film.genre == Documentary) {
+		out << "Movie Genre: Documentary" << endl;
+	}
+	else if (film.genre == Animated) {
+		out << "Movie Genre: Animated" << endl;
+	}
+	else if (film.genre == Thriller) {
+		out << "Movie Genre: Theriller" << endl;
+	}
+	else if (film.genre == Drama) {
+		out << "Movie Genre: Drama" << endl;
+	}
+	else if (film.genre == Comedy) {
+		out << "Movie Genre: Comedy" << endl;
+	}
+	else if (film.genre == Adventury) {
+		out << "Movie Genre: Adventury" << endl;
+	}
+	else if (film.genre == None) {
+		out << "Movie Genre: None" << endl;
+	}
+	out << "Date of release: " << film.date_of_release << endl;
+	out << "Director: " << film.director << endl;
+	out << "Duration: " << film.duration << endl;
+	out << "Fundraising: " << film.sum_of_money << endl;
+	out << "Rating: " << film.rating << endl;
+	return out;
+}
+istream& operator>> (istream& in, Film& film) {
+	int n = 0;
+	cout << "Movie data." << endl;
+	cout << "Print the name of movie: ";
+	in >> film.title;
+	cout << "Choose a movie genre from the list below: ";
+	cout << "\n1. Science fiction\n2. Horror\n3. Documentary\n4. Animated\n" <<
+		"5. Thriller\n6. Drama\n7. Comedy\n8. Adventury" << endl;
+	in >> n;
+	if (n == 1) {
+		film.genre = Science_fiction;
+	}
+	else if (n == 2) {
+		film.genre = Horror;
+	}
+	else if (n == 3) {
+		film.genre = Documentary;
+	}
+	else if (n == 4) {
+		film.genre = Animated;
+	}
+	else if (n == 5) {
+		film.genre = Thriller;
+	}
+	else if (n == 6) {
+		film.genre = Drama;
+	}
+	else if (n == 7) {
+		film.genre = Comedy;
+	}
+	else if (n == 8) {
+		film.genre = Adventury;
+	}
+	else {
+		film.genre = None;
+	}
+	cout << "Enter the director's initials:\n";
+	in >> film.director;
+	cout << "Enter the date of release:\n";
+	in >> film.date_of_release;
+	cout << "Enter the duration of movie:";
+	in >> film.duration;
+	cout << "Enter the sum of money:";
+	in >> film.sum_of_money;
+	cout << "Enter the rating of movie:";
+	in >> film.rating;
+
+
+
+
+
+	return in;
+}
 
 class Filmoteka {
-private:
-	string nameFilmoteka;
-	vector<Film> films;
+	int size;
+	int capacity;
+	Film* list;
 public:
-	Filmoteka(string _nameFilmoteka) : nameFilmoteka(_nameFilmoteka) {}
-
-	void AddFilm(const Film film) {
-		films.push_back(film);
+	Filmoteka() : size(0), capacity(5) {
+		list = new Film[capacity];
+	}
+	Filmoteka(int _capacity) :
+		size(0), capacity(_capacity)
+	{
+		list = new Film[capacity];
+	}
+	Filmoteka(const Filmoteka& f) :
+		size(f.size), capacity(f.capacity), list(f.list)
+	{}
+	~Filmoteka() {
+		delete[] list;
+		list = nullptr;
 	}
 
-	string get_nameF() const {
-		return nameFilmoteka;
-	}
-
-	vector<Film> get_films() const {
-		return films;
-	}
-
-	Filmoteka& operator=(const Filmoteka& teka) {
-		nameFilmoteka = teka.get_nameF();
-		films = teka.get_films();
-		return *this;
-	}
-
-	bool operator==(const Filmoteka& teka) const {
-		return nameFilmoteka == teka.get_nameF() &&
-			films == teka.get_films();
-	}
-
-	friend std::ostream& operator<<(std::ostream& out, const Filmoteka& teka) {
-		out << "Welcome to " << teka.get_nameF() << ". Here you can watch films that interest you.\n" <<
-			"-----Movies in your film library.-----";
-
-		vector<Film> films = teka.get_films();
-		for (int  i = 0; i < films.size(); i++) {
-			out << films[i] << "\n";
+	void addF(const Film& f) {
+		if (size >= capacity) {
+			int new_capacity = capacity * 2;
+			Film* new_list = new Film[new_capacity];
+			for (int i = 0; i < capacity; i++) {
+				new_list[i] = list[i];
+			}
+			delete[] list;
+			list = new_list;
+			capacity = new_capacity;
 		}
-		
-		out << "----------\n";
+		list[size] = f;
+		size++;
+	}
 
-		return out;
+	Film* get_list() const {
+		return list;
+	}
+	int get_size() {
+		return size;
+	}
+
+	void Prlist() {
+		for (int i = 0; i < size; i++) {
+			std::cout << "\n" << i + 1 << ") " << list[i];
+		}
 	}
 };
-
 
 int main() {
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
+	int choose = 0;
+	Film film;
+	Filmoteka F;
+	int num = 0;
 	SupportService sup("Support Service", "+79196575674", "supportservice@gmail.com");
-	cout << sup;
-
-	Film firstfilm("ABCf", "1:45:22", 10000, 8);
-	Data firstdate(29, 01, 2005);
-	FIO firstdeirectro("A", "B", "C");
-
+	while (true) {
+		cout << "Choose an action:\n1. Add film\n2. Check Filmoteka\n3. Support Service\n";
+		cin >> choose;
+		system("cls");
+		switch (choose) {
+		case 1:
+			cin >> film;;
+			F.addF(film);
+			choose = 0;
+			system("cls");
+			break;
+		case 2:
+			F.Prlist();
+			cout << "\n";
+			system("pause");
+			choose = 0;
+			system("cls");
+			break;
+		case 3:
+			cout << sup;
+			system("pause");
+			choose = 0;
+			system("cls");
+			break;
+		}
+	}
+	cout << "See you soon.";
 	return 0;
-
 }
