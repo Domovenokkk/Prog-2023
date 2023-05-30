@@ -371,6 +371,22 @@ public:
 			std::cout << "\n" << i + 1 << ") " << list[i];
 		}
 	}
+
+	void remove(int _count) {
+		int index = _count - 1;
+		if (index > size) {
+			std::cout << "err";
+		}
+		else if (index < 0) {
+			std::cout << "err";
+		}
+		else {
+			for (int i = index; i < size - 1; i++) {
+				list[i] = list[i + 1];
+			}
+			size--;
+		}
+	}
 };
 
 int main() {
@@ -380,9 +396,10 @@ int main() {
 	Film film;
 	Filmoteka F;
 	int num = 0;
+	int num1 = 0;
 	SupportService sup("Support Service", "+79196575674", "supportservice@gmail.com");
 	while (true) {
-		cout << "Choose an action:\n1. Add film\n2. Check Filmoteka\n3. Support Service\n";
+		cout << "Choose an action:\n1. Add film\n2. Check Filmoteka\n3. Remove\n4. Support Service\n5. Exit\n";
 		cin >> choose;
 		system("cls");
 		switch (choose) {
@@ -400,12 +417,21 @@ int main() {
 			system("cls");
 			break;
 		case 3:
+			std::cout << "Input index: ";
+			std::cin >> num1;;
+			F.remove(num1);
+			choose = 0;
+			break;
+		case 4:
 			cout << sup;
 			system("pause");
 			choose = 0;
 			system("cls");
 			break;
+		case 5:
+			return 0;
 		}
+		system("cls");
 	}
 	cout << "See you soon.";
 	return 0;
