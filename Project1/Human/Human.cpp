@@ -157,7 +157,7 @@ public:
 	Dodger GetDamage(const Dodger& enemy) {
 		Dodger result;
 		result.chance = rand() % 99 + 1;
-		if (result.chance > 1 and result.chance <= 20) {
+		if (result.chance > 1 and result.chance <= 10) {
 			return result;
 		}
 		else {

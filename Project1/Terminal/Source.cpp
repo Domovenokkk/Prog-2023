@@ -1,143 +1,120 @@
 #include <iostream>
+using namespace std;
 
 
-
-int NOD(int x, int y) {
-	int num;
-	if (x < y) {
-		num = x;
+int nod(int x, int y) {
+	while (x != y) {
+		if (x > y) { x = x - y; }
+		else { y = y - x; }
 	}
-	else {
-		num = y;
-	}
-	for (int i = 2; i < num; i++) {
-		if (!(x % i) && !(y & i)) {
-			return i;
-		}
-		else return 1;
-	}
+	return y;
+}
+int nok(int x, int y) {
+	return x * y / nod(x, y);
 }
 
-class RationalNum {
+enum rationalERRORDiv {
+	DivisionByZero
+};
+class rational {
 protected:
-	int numeration;
-	int denomination;
-	friend class RationalWithintPart;
+	int numerator;
+	int denumerator;
 public:
-	RationalNum() = default;
+	rational(int _numerator, int _denumerator) {
+		numerator = _numerator;
+		denumerator = _denumerator;
+	}
+	rational(const rational& num) {
+		numerator = num.numerator;
+		denumerator = num.denumerator;
+	}
+	rational() :denumerator(1), numerator(0) {};
 
-	RationalNum(int _numeration, int _denomination) {
-		numeration - _numeration;
-		denomination - _denomination;
-	}
-
-	RationalNum(const RationalNum& num) {
-		numeration = num.numeration;
-		denomination = num.denomination;
-	}
-
-
-	void SetNumeration(int _numeration) {
-		numeration = _numeration;
-	}
-	void SetDenomination(int _denomination) {
-		denomination = _denomination;
-	}
-	int GetNumeration(int numeration) {
-		return numeration;
-	}
-	int GetDenomination(int denomination) {
-		return denomination;
+	int getNumerator() { return numerator; }
+	int getDenumerator() { return denumerator; }
+	void setNumerator(int _numerator) { numerator = _numerator; }
+	void setDenumerator(int _denumerator) {
+		if (_denumerator != 0) { denumerator = _denumerator; }
+		else { throw DivisionByZero; }
 	}
 
-
-	RationalNum RationalAdd(const RationalNum& right) {
-		RationalNum result;
-		if (denomination == right.denomination) {
-			result.numeration += right.numeration;
-		}
-		else {
-			int denom = denomination;
-			result.denomination = NOD(denomination, right.denomination);
-			denom = denomination / denom;
-			result.numeration = numeration * denom + right.numeration * denom;
-			delete& denom;
-		}
-		return result;
+	rational operator+(const rational& num) {
+		int NOK = nok(num.denumerator, this->denumerator);
+		this->numerator = this->numerator * (NOK / this->denumerator) + num.numerator * (NOK / num.denumerator);
+		this->denumerator = NOK;
+		return rational{ this->numerator, this->denumerator };
 	}
 
-	RationalNum RationalSub(const RationalNum& right) {
-		RationalNum result;
-		if (denomination == right.denomination) {
-			result.numeration += right.numeration;
-		}
-		else {
-			int denom = denomination;
-			result.denomination = NOD(denomination, right.denomination);
-			denom = denomination / denom;
-			result.numeration = numeration * denom + right.numeration * denom;
-			delete& denom;
-		}
-		return result;
+
+	rational operator*(const rational& num) {
+		this->numerator = num.numerator * this->numerator;
+		this->denumerator = num.denumerator * this->denumerator;
+		return rational{ this->numerator, this->denumerator };
+	}
+	
+	rational operator/(const rational& num) {
+		this->numerator = this->numerator * num.denumerator;
+		this->denumerator = this->denumerator * num.numerator;
+		return rational{ this->numerator, this->denumerator };
 	}
 
-	RationalNum RationalMult(const RationalNum& right) {
-		RationalNum result;
-		result.numeration = numeration * right.numeration;
-		result.denomination = denomination * right.denomination;
-		return result;
+	rational operator-(const rational& num) {
+		int NOK = nok(num.denumerator, this->denumerator);
+		this->numerator = this->numerator * (NOK / this->denumerator) - num.numerator * (NOK / num.denumerator);
+		this->denumerator = NOK;
+		return rational{ this->numerator, this->denumerator };
 	}
 
-	RationalNum RationalDiv(const RationalNum& right) {
-		RationalNum result;
-		result.numeration = numeration * right.denomination;
-		result.denomination = denomination * right.numeration;
-		return result;
+	rational operator=(const rational& num) {
+		numerator = num.numerator;
+		denumerator = num.denumerator;
+		return rational(numerator, denumerator);
 	}
 
-	void Simply() {
-		denomination = denomination / NOD(numeration, denomination);
-		numeration = numeration / NOD(numeration, denomination);
+	void printff() {
+		cout << this->numerator << " " << this->denumerator << endl;
 	}
 
-};
-
-
-class RationalWithintPart : RationalNum {
-	int integer;
-public:
-	RationalWithintPart() = default;
-	RationalWithintPart(int _numenation, int _denomination, int _integer) : RationalNum(_numenation, _denomination), integer(_integer) {}
-	RationalWithintPart(const RationalNum& One) : RationalNum(One.numeration, One.denomination) {
-		integer = 0;
-		numeration = One.numeration;
-		denomination = One.denomination;
-	}
-	RationalWithintPart(const RationalWithintPart& One) : RationalNum(One.numeration, One.denomination) {
-		integer = One.integer;
-		numeration = One.numeration;
-		denomination = One.denomination;
-	}
-	void SetInteget(int _integer) {
-		integer = _integer;
-	}
-	int GetInteger(int integer) {
-		return integer;
-	}
-
-	RationalWithintPart WholePart(const class RationalNum& integer) {
-		RationalWithintPart result;
-		int k = 0;
-		while (result.numeration > result.denomination) {
-			k += 1;
-			result.numeration -= result.denomination;
-		}
-		result.integer = k;
-		return result;
+	void rationalSimplify(const rational& NUM) {
+		int NOK = nok(this->numerator, this->denumerator);
+		this->numerator = this->numerator / NOK;
+		this->denumerator = this->denumerator / NOK;
 	}
 };
 
+class rationalWithIntPart : public rational {
+	int intPart;
+public:
+	int getIntPart() { return this->intPart; }
+	void setIntPart(int intPart) { this->intPart = intPart; }
+	rationalWithIntPart() = default;
+	rationalWithIntPart(int _IntPart, int _Num, int _Denum) {
+		if (_Denum != 0) {
+			this->setDenumerator(_Denum);
+			this->setNumerator(_Num);
+			this->intPart = _IntPart;
+		}
+		else { throw DivisionByZero; }
+	};
+	rationalWithIntPart(const rationalWithIntPart& NUMBER) {
+		this->setDenumerator(NUMBER.denumerator);
+		this->setNumerator(NUMBER.numerator);
+		this->intPart = NUMBER.intPart;
+	};
 
-int main() {
+	void rationalSelectInt(const rationalWithIntPart& NUMBER) {
+		this->intPart = this->getNumerator() / this->getDenumerator();
+		this->setNumerator(this->getNumerator() % this->getDenumerator());
+	}
 
+	void Print() {
+		cout << this->intPart << " " << this->numerator << " " << this->denumerator << endl;
+	}
+};
+void main() {
+	rationalWithIntPart n1(2, 4, 5);
+	rationalWithIntPart n2;
+	n2.rationalSelectInt(n2);
+	n2.Print();
 }
