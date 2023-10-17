@@ -33,7 +33,17 @@ private:
 
 public:
 	// обязательный функционал
-	TBitField(size_t _BitLen);                             // конструктор специального вида
+	TBitField(size_t _BitLen) {
+		if (_BitLen <= 0) { throw std::logic_error("Out of range."); }
+		else {
+			bitLen = _BitLen;
+			memLen = (_BitLen - 1) / (8 * sizeof(elem_type)) + 1;
+			pMem = new elem_type[memLen];
+			for (int i = 0; i < memLen; i++) {
+				pMem[i] = 0;
+			}
+		}
+	}                            
 	TBitField(const TBitField & bf)
 	{
 		bitLen = bf.bitLen;
@@ -62,7 +72,7 @@ public:
 	TBitField  operator~(void);                            // отрицание
 
 	// получить длину (к-во битов)
-	size_t size() const noexcept { /* <...> */ }
+	size_t size() const noexcept { return bitLen; }
 
 	friend void swap(TBitField& lhs, TBitField& rhs) noexcept;
 
@@ -156,11 +166,11 @@ void swap(TBitField& lhs, TBitField& rhs) noexcept
 
 std::ostream& operator<<(std::ostream& ostr, const TBitField& bf)
 {
-	for (int i = 0; i < bf.bitLen; i++) 
+	for (int i = 0; i < bf.size(); ++i)
 	{
 		ostr << bf.test(i) << " ";
 	}
-	ostr << std::endl;
+	ostr << "\n";
 	return ostr;
 }
 
@@ -169,7 +179,7 @@ std::istream& operator>>(std::istream& istr, TBitField& bf) {
 	{
 		int in;
 		istr >> in;
-		bf.set(i);
+		if (in) bf.set(i);
 	}
 	return istr;
 }
