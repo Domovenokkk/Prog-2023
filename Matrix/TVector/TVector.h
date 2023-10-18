@@ -37,33 +37,73 @@ public:
 
     T& operator[](size_t ind) {
         if (ind < 0 || ind > MAX_VECTOR_SIZE) {
-            throw std::length_error("The index cannot have this value.");
+            throw std::logic_error("The index cannot have this value.");
         }
-        return pMem[ind];
+        return this->pMem[ind];
     }
 
-    bool operator==(const TVector& v) const с;
-    bool operator!=(const TVector& v) const noexcept;
+    bool operator==(const TVector& v)const noexcept {
+        if (_size != v._size) {
+            throw std::logic_error("Vectors have different sizes");
+        }
+        TVector<T> res(*this);
+        for (auto i = 0; i < _size; i++) {
+            res[i] == v[i];
+        }
+    }
+    bool operator!=(const TVector& v) const noexcept {
+        return !(*this == v);
+    }
 
-    TVector operator+(double val);
-    TVector operator-(double val);
-    TVector operator*(double val);
+    TVector operator+(T val) {
+        for (auto i = 0; i < _size; i++) {
+            pMem[i] = pMem[i] + val;
+        }
+    }
+    TVector operator-(T val) {
+        for (auto i = 0; i < _size; i++) {
+            pMem[i] = pMem[i] - val;
+        }
+    }
+    TVector operator*(T val) {
+        for (auto i = 0; i < _size; i++) {
+            pMem[i] = pMem[i] * val;
+        }
+    }
 
-    TVector operator+(T val);
-    TVector operator-(T val);
-    TVector operator*(T val);
-
-    TVector operator+(const TVector& v);
-    TVector operator-(const TVector& v);
+    TVector operator+(const TVector& v) {
+        if (_size != v._size) {
+            throw std::length_error("Vectors have different sizes");
+        }
+        TVector<T> res(*this);
+        for (auto i = 0; i < _size; i++) {
+            res[i] = res[i] + v[i];
+        }
+    }
+    TVector operator-(const TVector& v) {
+        if (_size != v._size) {
+            throw std::length_error("Vectors have different sizes");
+        }
+        TVector<T> res(*this);
+        for (auto i = 0; i < _size; i++) {
+            res[i] = res[i] - v[i];
+        }
+    }
 
     // почитать о noexcept(noexcept(T())) - объ€снить назначение при сдаче
-    T operator*(const TVector& v) noexcept(noexcept(T()));
+    T operator*(const TVector& v) noexcept(noexcept(T()))
+    {
+        if (_size != v._size) { throw std::logic_error("Vector sizes are not equal."); }
+        T tmp;
+        for (auto i = 0; i < _size; i++) {
+            tmp = tmp + (*this)[i] * v[i];
+        }
+        return tmp;
+    }
 
     friend void swap(TVector& lhs, TVector& rhs) noexcept;
-
-    // ввод/вывод
-    friend istream& operator>>(istream& istr, TVector& v);
-    friend ostream& operator<<(ostream& ostr, const TVector& v);
+    friend std::istream& operator>>(std::istream& istr, TVector& v);
+    friend std::ostream& operator<<(std::ostream& ostr, const TVector& v);
 };
 
 template <class T>
