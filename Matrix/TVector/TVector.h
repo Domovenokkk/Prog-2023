@@ -1,4 +1,3 @@
-#pragma once
 
 #include <iostream>
 const int MAX_VECTOR_SIZE = 100000000;
@@ -55,6 +54,10 @@ public:
         return !(*this == v);
     }
 
+    size_t size() const noexcept {
+        return _size;
+    }
+
     TVector operator+(T val) {
         for (auto i = 0; i < _size; i++) {
             pMem[i] = pMem[i] + val;
@@ -93,7 +96,6 @@ public:
     // почитать о noexcept(noexcept(T())) - объ€снить назначение при сдаче
     T operator*(const TVector& v) noexcept(noexcept(T()))
     {
-        if (_size != v._size) { throw std::logic_error("Vector sizes are not equal."); }
         T tmp;
         for (auto i = 0; i < _size; i++) {
             tmp = tmp + (*this)[i] * v[i];

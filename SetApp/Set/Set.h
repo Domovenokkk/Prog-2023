@@ -65,7 +65,7 @@ TSet TSet:: operator+(const int Elem)
 {
 	if (Elem < 0 || Elem >= maxPower) { throw std::logic_error("Out of range."); }
 	else {
-		TSet ts(bitField);
+		TSet ts(*this);
 		ts.InsElem(Elem);
 		return ts;
 	}
@@ -75,7 +75,7 @@ TSet TSet:: operator-(const int Elem)
 {
 	if (Elem < 0 || Elem >= maxPower) { throw std::logic_error("Out of range."); }
 	else {
-		TSet ts(bitField);
+		TSet ts(*this);
 		ts.DelElem(Elem);
 		return ts;
 	}
@@ -83,29 +83,31 @@ TSet TSet:: operator-(const int Elem)
 
 TSet TSet:: operator+(const TSet& s) 
 {
-	int maxP;
-	if (maxPower > s.maxPower) { maxP = maxPower; }
-	else { maxP = s.maxPower; }
-	TSet ts(maxP);
+	TSet ts(*this);
+	if (s.maxPower > maxPower) { ts.maxPower = s.maxPower; }
+	else { ts.maxPower = maxPower; }
 	ts.bitField = bitField | s.bitField;
 	return ts;
 }
 
 TSet TSet:: operator*(const TSet& s) 
 {
-	int maxP;
-	if (maxPower > s.maxPower) { maxP = maxPower; }
-	else { maxP = s.maxPower; }
-	TSet ts(maxP);
+	TSet ts(*this);
+	if (s.maxPower > maxPower) { ts.maxPower = s.maxPower; }
+	else { ts.maxPower = maxPower; }
 	ts.bitField = bitField & s.bitField;
 	return ts;
 }
 
-TSet TSet:: operator~() { return TSet(~bitField); }
+TSet TSet:: operator~() {
+	TSet ts(*this);
+	ts.bitField = ~bitField;
+	return ts;
+}
 
 int TSet:: operator==(const TSet& s) const { return (bitField == s.bitField); }
 
-int TSet:: operator!=(const TSet& s) const { return !(*this == s); }
+int TSet:: operator!=(const TSet& s) const { return (bitField != s.bitField); }
 
 TSet& TSet:: operator=(const TSet& s) 
 {
@@ -115,19 +117,17 @@ TSet& TSet:: operator=(const TSet& s)
 }
 
 std::istream& operator>>(std::istream& istr, TSet& s) {
-	const int mp = s.maxPower;
-	for (int i = 0; i < mp; ++i) {
-		int val;
-		istr >> val;
-		s.InsElem(val);
-	}
+	int elem;
+	istr >> elem;
+	s = s + elem;
 	return istr;
 }
 
 std::ostream& operator<<(std::ostream& ostr, const TSet& s) {
-	const int mp = s.maxPower;
-	for (int i = 0; i < mp; ++i) {
-		ostr << s.IsMember(i) << " ";
+	for (int i = 0; i < s.maxPower; i++) {
+		if (s.bitField.test(i) == 1) {
+			ostr << i << " ";
+		}
 	}
 	return ostr;
 }

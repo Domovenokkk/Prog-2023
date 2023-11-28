@@ -168,7 +168,7 @@ enum Genre {Science_fiction, Horror, Documentary, Animated, Thriller, Drama, Com
 class Film {
 private:
 	string title;
-	Genre genre;
+	/*Genre genre;*/
 	Data date_of_release;
 	FIO director;
 	string duration;
@@ -178,18 +178,18 @@ public:
 	
 	Film() {
 		title = "None";
-		genre = None;
+		/*genre = None;*/
 		duration = "None";
 		sum_of_money = 0;
 		rating = 0;
 	}
 
-	Film(string _title, Genre _genre, string _duration, int _sum_of_money, int _rating,
+	Film(string _title/*, Genre _genre*/, string _duration, int _sum_of_money, int _rating,
 		Data _date_of_release, FIO _director) :
-		title(_title), genre(_genre), duration(_duration), sum_of_money(_sum_of_money),
+		title(_title)/*, genre(_genre)*/, duration(_duration), sum_of_money(_sum_of_money),
 		rating(_rating), date_of_release(_date_of_release), director(_director) {}
 
-	Film(const Film& film) : title(film.title), genre(film.genre), duration(film.duration),
+	Film(const Film& film) : title(film.title), /*genre(film.genre),*/ duration(film.duration),
 		sum_of_money(film.sum_of_money), rating(film.rating), date_of_release(film.date_of_release),
 		director(film.director) 
 	{}
@@ -235,7 +235,7 @@ public:
 
 ostream& operator<<(ostream& out, const Film& film) {
 	out << "--" << film.title << "--" << endl;
-	if (film.genre == Science_fiction) {
+	/*if (film.genre == Science_fiction) {
 		out << "Movie Genre: Science fiction" << endl;
 	}
 	else if (film.genre == Horror) {
@@ -261,7 +261,7 @@ ostream& operator<<(ostream& out, const Film& film) {
 	}
 	else if (film.genre == None) {
 		out << "Movie Genre: None" << endl;
-	}
+	}*/
 	out << "Date of release: " << film.date_of_release << endl;
 	out << "Director: " << film.director << endl;
 	out << "Duration: " << film.duration << endl;
@@ -274,37 +274,37 @@ istream& operator>> (istream& in, Film& film) {
 	cout << "Movie data." << endl;
 	cout << "Print the name of movie: ";
 	in >> film.title;
-	cout << "Choose a movie genre from the list below: ";
-	cout << "\n1. Science fiction\n2. Horror\n3. Documentary\n4. Animated\n" <<
-		"5. Thriller\n6. Drama\n7. Comedy\n8. Adventury" << endl;
-	in >> n;
-	if (n == 1) {
-		film.genre = Science_fiction;
-	}
-	else if (n == 2) {
-		film.genre = Horror;
-	}
-	else if (n == 3) {
-		film.genre = Documentary;
-	}
-	else if (n == 4) {
-		film.genre = Animated;
-	}
-	else if (n == 5) {
-		film.genre = Thriller;
-	}
-	else if (n == 6) {
-		film.genre = Drama;
-	}
-	else if (n == 7) {
-		film.genre = Comedy;
-	}
-	else if (n == 8) {
-		film.genre = Adventury;
-	}
-	else {
-		film.genre = None;
-	}
+	//cout << "Choose a movie genre from the list below: ";
+	//cout << "\n1. Science fiction\n2. Horror\n3. Documentary\n4. Animated\n" <<
+	//	"5. Thriller\n6. Drama\n7. Comedy\n8. Adventury" << endl;
+	//in >> n;
+	//if (n == 1) {
+	//	film.genre = Science_fiction;
+	//}
+	//else if (n == 2) {
+	//	film.genre = Horror;
+	//}
+	//else if (n == 3) {
+	//	film.genre = Documentary;
+	//}
+	//else if (n == 4) {
+	//	film.genre = Animated;
+	//}
+	//else if (n == 5) {
+	//	film.genre = Thriller;
+	//}
+	//else if (n == 6) {
+	//	film.genre = Drama;
+	//}
+	//else if (n == 7) {
+	//	film.genre = Comedy;
+	//}
+	//else if (n == 8) {
+	//	film.genre = Adventury;
+	//}
+	//else {
+	//	film.genre = None;
+	//}
 	cout << "Enter the director's initials:\n";
 	in >> film.director;
 	cout << "Enter the date of release:\n";

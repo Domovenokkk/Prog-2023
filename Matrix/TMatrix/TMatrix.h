@@ -66,6 +66,7 @@ public:
         }
         return Res;
     }
+    
     TMatrix operator-(const TMatrix& m)
     {
         if (sz != m.sz) { throw std::logic_error("Sizes are not equal."); }
@@ -77,7 +78,22 @@ public:
         }
         return Res;
     }
-    TMatrix operator*(const TMatrix& m);
+    
+    TMatrix operator*(const TMatrix& m) 
+    {
+        if (_size != m._size) { throw std::logic_error("Sizes are not equal."); }
+        TMatrix<T> matrix(_size);
+        for (size_t i = 0; i < size; i++) {
+            for (size_t j = 0; j < size; j++) {
+                T s = 0;
+                for (size_t k = 0; k < size; k++) {
+                    s += pMem[i][k] * m[k][j];
+                }
+                matrix[i][j] = s;
+            }
+        }
+        return matrix;
+    }
 
     // ввод/вывод
     friend std::istream& operator>>(std::istream& istr, TMatrix& v);
