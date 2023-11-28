@@ -17,6 +17,7 @@ public:
     }
     // почему можно сделать так? ќбъ€снить.
     using TVector<TVector<T>>::operator[];
+    using TVector<TVector<T>>::size;
 
     // сравнение
     bool operator==(const TMatrix& m) const noexcept 
