@@ -129,9 +129,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\Downloads\Telegram Desktop\test_bitfield.cpp" />
-    <ClCompile Include="..\..\..\..\Downloads\Telegram Desktop\test_set.cpp" />
     <ClCompile Include="mainT.cpp" />
+    <ClCompile Include="test_bitfield.cpp" />
+    <ClCompile Include="test_set.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BitField\BitField.vcxproj">

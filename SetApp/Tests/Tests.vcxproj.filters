@@ -18,10 +18,10 @@
     <ClCompile Include="mainT.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Downloads\Telegram Desktop\test_set.cpp">
+    <ClCompile Include="test_bitfield.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\Downloads\Telegram Desktop\test_bitfield.cpp">
+    <ClCompile Include="test_set.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
