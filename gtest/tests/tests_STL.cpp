@@ -1,4 +1,4 @@
-#include "gtest.h"
+#include "../gtest/gtest.h"
 #include "../STL/StlH.h"
 
 TEST(test_division, throw_when_try_div_by_zero_test) {
