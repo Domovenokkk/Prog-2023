@@ -5,10 +5,11 @@ const int MAX_VECTOR_SIZE = 100000000;
 template<typename T>
 class TVector {
 protected:
+    int _shift;
     size_t _size;
     T* pMem;
 public:
-    TVector(size_t sz = 1) : _size(sz) {
+    TVector(size_t sz = 1, int shift = 0) : _size(sz), _shift(shift) {
         if (sz == 0)
             throw std::length_error("Vector size should be greater than zero");
         if (sz > MAX_VECTOR_SIZE)
@@ -16,7 +17,7 @@ public:
         pMem = new T[sz]();
     }
 
-    TVector(T* data, size_t sz) : _size(sz) {
+    TVector(T* data, size_t sz, int shift) : _size(sz), _shift(shift) {
         // еще один способ ввода исключений
         assert(data != nullptr && "TVector constructor requires non-nullptr argument.");
         pMem = new T[sz];
@@ -26,6 +27,7 @@ public:
 
     TVector(const TVector& v) {
         _size = v._size;
+        _shift = v._shift;
         pMem = v.pMem;
     }
 
@@ -38,7 +40,7 @@ public:
         if (ind < 0 || ind > MAX_VECTOR_SIZE) {
             throw std::logic_error("The index cannot have this value.");
         }
-        return this->pMem[ind];
+        return this->pMem[ind - _shift];
     }
 
     bool operator==(const TVector& v)const noexcept {
