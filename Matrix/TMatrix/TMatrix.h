@@ -37,9 +37,7 @@ public:
     {
         TMatrix M(*this);
         for (int i = 0; i < sz; i++) {
-            for (int j = 0; j < sz; j++) {
-                pMem[i][j] = pMem[i][j] * val;
-            }
+            pMem[i] = pMem[i] * val;
         }
         return M;
     }
@@ -52,7 +50,6 @@ public:
         for (size_t i = 0; i < _size; i++) {
             V[i] = pMem[i] * v.pMem[i];
         }
-
     }
 
     // матрично-матричные операции
@@ -61,9 +58,7 @@ public:
         if (sz != m.sz) { throw std::logic_error("Sizes are not equal."); }
         TMatrix Res(*this);
         for (size_t i = 0; i < sz; i++) {
-            for (size_t j = 0; j < sz; j++) {
-                pMem[i][j] = pMem[i][j] + m.pMem[i][j];
-            }
+            Res[i] = Res[i] + m[i];
         }
         return Res;
     }
@@ -73,9 +68,7 @@ public:
         if (sz != m.sz) { throw std::logic_error("Sizes are not equal."); }
         TMatrix Res(*this);
         for (size_t i = 0; i < sz; i++) {
-            for (size_t j = 0; j < sz; j++) {
-                pMem[i][j] = pMem[i][j] - m.pMem[i][j];
-            }
+            Res[i] = Res[i] - m[i];
         }
         return Res;
     }
