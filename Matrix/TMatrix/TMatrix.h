@@ -56,21 +56,13 @@ public:
     TMatrix operator+(const TMatrix& m)
     {
         if (sz != m.sz) { throw std::logic_error("Sizes are not equal."); }
-        TMatrix Res(*this);
-        for (size_t i = 0; i < sz; i++) {
-            Res[i] = Res[i] + m[i];
-        }
-        return Res;
+        return TVector<TVector>operator+(m);
     }
     
     TMatrix operator-(const TMatrix& m)
     {
         if (sz != m.sz) { throw std::logic_error("Sizes are not equal."); }
-        TMatrix Res(*this);
-        for (size_t i = 0; i < sz; i++) {
-            Res[i] = Res[i] - m[i];
-        }
-        return Res;
+        return TVector<TVector>operator-(m);
     }
     
     TMatrix operator*(const TMatrix& m) 
