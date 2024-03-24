@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <stdlib.h> 
+#include <list>
 
 void FillVector(std::vector<int>& v) {
 	if (v.size() != 0) { v.clear(); }
@@ -59,3 +60,5 @@ void RandomShuffle(std::vector<int> v) {
 void erasevector(std::vector<int>& v) {
 	v.clear();
 }
+
+

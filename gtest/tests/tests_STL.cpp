@@ -73,3 +73,10 @@ TEST(erasevector_, check_erased) {
 	erasevector(vec);
 	EXPECT_EQ(vec.size(), 0);
 }
+
+TEST(addelemsforarray, check_size) {
+	std::list<int> l{ 1, 2, 3, 4, 5 };
+	int array[4] = { 6,7,8,9 };
+	AddElemsToList(l, array, 4);
+	EXPECT_EQ(l.size(), 9);
+}
